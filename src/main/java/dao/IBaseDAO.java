@@ -14,5 +14,7 @@ public interface IBaseDAO<T> {
 
     boolean delete(int id ) throws SQLException;
 
-    List<T> search(String keyWord) throws SQLException;
+    List<T> search(String keyword) throws SQLException;
+
+
 }

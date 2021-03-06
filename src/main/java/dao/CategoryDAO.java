@@ -1,8 +1,8 @@
 package dao;
 
-import model.Author;
 import model.Category;
 import model.Post;
+import model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,14 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryDAO extends DBDAO implements IBaseDAO<Category> {
-    private static final String INSERT_CATEGORY_SQL = "insert into category" + "(categoryName) values" +
-            "(?);";
-    private static final String SELECT_CATEGORY_BY_ID = "select * from category where idCategory = ?";
-    private static final String SELECT_ALL_CATEGORIES = "select * from category";
-    private static final String UPDATE_CATEGORY_SQL = "update category set categoryName = ? where idCategory = ?;";
-    private static final String DELETE_CATEGORY_SQL = "delete from category where idCategory = ?;";
-    private static final String DELETE_CATEGORY_FK_POST_SQL = "DELETE FROM post WHERE (idCategory = ?);";
-    private static final String FIND_ALL_POST_BY_CATEGORY = "SELECT post.*, categoryName, authorName, authorDes  FROM post inner join category on post.idCategory = category.idCategory inner join author on post.idAuthor = author.idAuthor where post.idCategory = ?;";
+    private static final String INSERT_CATEGORY_SQL = "INSERT INTO `blogdemo`.`categories` (`name`) VALUES (?);";
+    private static final String SELECT_CATEGORY_BY_ID = "select * from categories where `id` = ?";
+    private static final String SELECT_ALL_CATEGORIES = "select * from categories";
+    private static final String UPDATE_CATEGORY_SQL = "UPDATE `blogdemo`.`categories` SET `name` = ? WHERE (`id` = ?);";
+    private static final String DELETE_CATEGORY_SQL = "delete from categories where id = ?;";
+    private static final String DELETE_CATEGORY_FK_POST_SQL = "DELETE FROM posts WHERE (idcategory = ?);";
+    private static final String FIND_ALL_POST_BY_CATEGORY = "SELECT posts.*, categories.`name`, users.email FROM posts inner join categories on posts.idcategory = categories.id inner join users on posts.iduser = users.id where posts.idcategory = ?;";
 
     @Override
     public List<Category> selectAll() throws SQLException {
@@ -31,8 +30,8 @@ public class CategoryDAO extends DBDAO implements IBaseDAO<Category> {
             System.out.println(preparedStatement);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("idCategory");
-                String name = rs.getString("categoryName");
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
                 categoryList.add(new Category(id, name));
             }
         } catch (SQLException e) {
@@ -43,10 +42,9 @@ public class CategoryDAO extends DBDAO implements IBaseDAO<Category> {
 
     @Override
     public void insert(Category category) throws SQLException {
-        System.out.println(INSERT_CATEGORY_SQL);
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CATEGORY_SQL)) {
-            preparedStatement.setString(1, category.getCategoryName());
+            preparedStatement.setString(1, category.getName());
             System.out.println(preparedStatement);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -63,7 +61,7 @@ public class CategoryDAO extends DBDAO implements IBaseDAO<Category> {
             System.out.println(preparedStatement);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                String name = rs.getString("categoryName");
+                String name = rs.getString("name");
                 category = new Category(id, name);
             }
         } catch (SQLException e) {
@@ -76,8 +74,8 @@ public class CategoryDAO extends DBDAO implements IBaseDAO<Category> {
     public boolean update(Category category) throws SQLException {
         boolean rowUpdate;
         try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(UPDATE_CATEGORY_SQL);) {
-            statement.setString(1, category.getCategoryName());
-            statement.setInt(2, category.getIdCategory());
+            statement.setString(1, category.getName());
+            statement.setInt(2, category.getId());
             System.out.println(statement);
             rowUpdate = statement.executeUpdate() > 0;
         }
@@ -93,9 +91,11 @@ public class CategoryDAO extends DBDAO implements IBaseDAO<Category> {
             connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement(DELETE_CATEGORY_FK_POST_SQL);
             statement.setInt(1, id);
+            System.out.println(statement);
             statement.executeUpdate();
             statement = connection.prepareStatement(DELETE_CATEGORY_SQL);
             statement.setInt(1,id);
+            System.out.println(statement);
             statement.executeUpdate();
             rowDeleted = statement.executeUpdate() > 0;
             connection.commit();
@@ -110,9 +110,10 @@ public class CategoryDAO extends DBDAO implements IBaseDAO<Category> {
     }
 
     @Override
-    public List<Category> search(String keyWord) throws SQLException {
+    public List<Category> search(String keyword) throws SQLException {
         return null;
     }
+
 
     private void printSQLException(SQLException ex) {
         for (Throwable e : ex) {
@@ -138,21 +139,22 @@ public class CategoryDAO extends DBDAO implements IBaseDAO<Category> {
             System.out.println(preparedStatement);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                String postTitle = rs.getString("postTitle");
-                String fullContent = rs.getString("fullContent");
-                String shortContent = rs.getString("shortContent");
-                String date = rs.getString("publishDate");
+                String postTitle = rs.getString("title");
+                String fullContent = rs.getString("fullcontent");
+                String shortContent = rs.getString("shortcontent");
+                String createdDate = rs.getString("createddate");
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                LocalDateTime localDateTime = LocalDateTime.parse(date, dateTimeFormatter);
+                LocalDateTime localDateTime = LocalDateTime.parse(createdDate, dateTimeFormatter);
                 String image = rs.getString("image");
-                int idCategory = rs.getInt("idCategory");
-                int idAuthor = rs.getInt("idAuthor");
-                String categoryName = rs.getString("categoryName");
-                String authorName = rs.getString("authorName");
-                String authorDes = rs.getString("authorDes");
+                String lastEditTime = rs.getString("lastedittime");
+                LocalDateTime localDateTime2 = LocalDateTime.parse(lastEditTime, dateTimeFormatter);
+                int idCategory = rs.getInt("idcategory");
+                int idUser = rs.getInt("iduser");
+                String categoryName = rs.getString("name");
+                String email = rs.getString("email");
                 Category category = new Category(idCategory, categoryName);
-                Author author = new Author(idAuthor, authorName, authorDes);
-                postList.add(new Post(idCategoryFind, postTitle, fullContent, shortContent, localDateTime, image, category, author));
+                User user = new User(idUser, email);
+                postList.add(new Post(idCategoryFind, postTitle, fullContent, shortContent, localDateTime, image, localDateTime2, category, user));
             }
         } catch (SQLException e) {
             printSQLException(e);

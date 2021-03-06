@@ -1,39 +1,58 @@
 package model;
 
 public class Category {
-    private int idCategory;
-    private String categoryName;
+    private int id;
+    private String name;
+    private String des;
 
-    public Category(int idCategory, String categoryName) {
-        this.idCategory = idCategory;
-        this.categoryName = categoryName;
+    public Category(int id, String name, String des) {
+        this.id = id;
+        this.name = name;
+        this.des = des;
     }
 
-    public Category(String categoryName) {
-        this.categoryName = categoryName;
+    public Category(String name, String des) {
+        this.name = name;
+        this.des = des;
     }
 
-    public Category(int idCategory) {
-        this.idCategory = idCategory;
+    public Category(int id) {
+        this.id = id;
     }
 
     public Category() {
     }
 
-
-    public int getIdCategory() {
-        return idCategory;
+    public Category(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
-    public void setIdCategory(int idCategory) {
-        this.idCategory = idCategory;
+    public Category(String name) {
+        this.name = name;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public int getId() {
+        return id;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDes() {
+        return des;
+    }
+
+    public void setDes(String des) {
+        this.des = des;
     }
 }

@@ -14,6 +14,10 @@ public class PostService implements IBaseService<Post>{
         return postDAO.selectAll();
     }
 
+    public List<Post> selectAllPostUser(int idUser) throws SQLException {
+        return postDAO.selectAllPostUser(idUser);
+    }
+
     @Override
     public void insert(Post post) throws SQLException {
         postDAO.insert(post);

@@ -43,7 +43,9 @@ public class CategoryServlet extends HttpServlet {
         String name = request.getParameter("name");
         Category category = new Category(id, name);
         categoryService.update(category);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("category/edit-category.jsp");
+        request.setAttribute("mess", "Edit success");
+        request.setAttribute("category", category);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/category/edit-category.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -51,7 +53,8 @@ public class CategoryServlet extends HttpServlet {
         String name = request.getParameter("name");
         Category newCategory = new Category(name);
         categoryService.insert(newCategory);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("category/create-category.jsp");
+        request.setAttribute("mess", "Add success");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/category/create-category.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -84,20 +87,21 @@ public class CategoryServlet extends HttpServlet {
         categoryService.delete(id);
         List<Category> categoryList = categoryService.selectAll();
         request.setAttribute("categories", categoryList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("category/list-category.jsp");
+        request.setAttribute("mess", "Delete success");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/category/list-category.jsp");
         dispatcher.forward(request, response);
     }
 
     private void showEditCategory(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         Category existingCategory = categoryService.findById(id);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("category/edit-category.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/category/edit-category.jsp");
         request.setAttribute("category", existingCategory);
         dispatcher.forward(request, response);
     }
 
     private void showCreateCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("category/create-category.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/category/create-category.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -108,7 +112,7 @@ public class CategoryServlet extends HttpServlet {
         } catch (SQLException e) {
             response.sendRedirect("error-404.jsp");
         }
-        RequestDispatcher dispatcher = request.getRequestDispatcher("category/list-category.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/category/list-category.jsp");
         dispatcher.forward(request, response);
     }
 }

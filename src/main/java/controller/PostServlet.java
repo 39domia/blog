@@ -1,11 +1,11 @@
 package controller;
 
-import model.Author;
 import model.Category;
 import model.Post;
-import service.AuthorService;
+import model.User;
 import service.CategoryService;
 import service.PostService;
+import service.UserService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
 public class PostServlet extends HttpServlet {
     PostService postService = new PostService();
     CategoryService categoryService = new CategoryService();
-    AuthorService authorService = new AuthorService();
+    UserService userService = new UserService();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -75,7 +76,7 @@ public class PostServlet extends HttpServlet {
         String keyWord = request.getParameter("keyWord");
         List<Post> postList = postService.search(keyWord);
         request.setAttribute("posts", postList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("post/list-post.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/post/list-post.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -84,11 +85,8 @@ public class PostServlet extends HttpServlet {
         postService.delete(id);
         List<Post> postList = postService.selectAll();
         request.setAttribute("posts", postList);
-        List<Category> categoryList = categoryService.selectAll();
-        List<Author> authorList = authorService.selectAll();
-        request.setAttribute("authors", authorList);
-        request.setAttribute("categories", categoryList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("post/list-post.jsp");
+        request.setAttribute("mess", "Delete success");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/post/list-post.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -96,70 +94,92 @@ public class PostServlet extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         Post existingPost = postService.findById(id);
         List<Category> categoryList = categoryService.selectAll();
-        List<Author> authorList = authorService.selectAll();
-        request.setAttribute("authors", authorList);
+        List<User> userList = userService.selectAll();
+        request.setAttribute("users", userList);
         request.setAttribute("categories", categoryList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("post/edit-post.jsp");
         request.setAttribute("post", existingPost);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/post/edit-post.jsp");
         dispatcher.forward(request, response);
     }
 
     private void editPost(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+        HttpSession session=request.getSession();
         int id = Integer.parseInt(request.getParameter("id"));
-        String postTitle = request.getParameter("postTitle");
+        String postTitle = request.getParameter("title");
         String shortContent = request.getParameter("shortContent");
         String fullContent = request.getParameter("fullContent");
         String image = request.getParameter("image");
-        int idCategory = Integer.parseInt(request.getParameter("categorys"));
-        int idAuthor = Integer.parseInt(request.getParameter("authors"));
+        int idCategory = Integer.parseInt(request.getParameter("category"));
         Category category = new Category(idCategory);
-        Author author = new Author(idAuthor);
-        Post newPost = new Post(id, postTitle, fullContent, shortContent, image, category, author);
+        int idUser;
+        int role = (int) session.getAttribute("role");
+        if ( role == 1){
+            idUser = Integer.parseInt(request.getParameter("user"));
+        }else {
+            idUser = (Integer) session.getAttribute("idUser");
+        }
+        User user = new User(idUser);
+        Post newPost = new Post(id, postTitle, fullContent, shortContent, image, category, user);
         postService.update(newPost);
         List<Category> categoryList = categoryService.selectAll();
-        List<Author> authorList = authorService.selectAll();
         List<Post> postList = postService.selectAll();
-        request.setAttribute("authors", authorList);
         request.setAttribute("posts", postList);
         request.setAttribute("categories", categoryList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("post/edit-post.jsp");
+        request.setAttribute("post", newPost);
+        request.setAttribute("mess", "Edit success");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/post/edit-post.jsp");
         dispatcher.forward(request, response);
     }
 
 
     private void listPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        HttpSession session =request.getSession();
         try {
+            List<Post> userPostList=postService.selectAllPostUser((Integer) session.getAttribute("idUser"));
+            request.setAttribute("postsUser",userPostList);
             List<Post> postList = postService.selectAll();
             request.setAttribute("posts", postList);
         } catch (SQLException e) {
             response.sendRedirect("error-404.jsp");
         }
-        RequestDispatcher dispatcher = request.getRequestDispatcher("post/list-post.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/post/list-post.jsp");
         dispatcher.forward(request, response);
     }
 
     private void insertPost(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
-        String postTitle = request.getParameter("postTitle");
+        HttpSession session= request.getSession();
+        String title = request.getParameter("title");
         String shortContent = request.getParameter("shortContent");
         String fullContent = request.getParameter("fullContent");
         String image = request.getParameter("image");
-        int idCategory = Integer.parseInt(request.getParameter("categorys"));
-        int idAuthor = Integer.parseInt(request.getParameter("authors"));
-        Category newCategory = new Category(idCategory);
-        Author newAuthor = new Author(idAuthor);
-        Post newPost = new Post(postTitle, fullContent, shortContent, image, newCategory, newAuthor);
+        int categoryID = Integer.parseInt(request.getParameter("category"));
+        Category category = new Category(categoryID);
+        int idUser;
+        int role = (int) session.getAttribute("role");
+        if ( role == 1){
+            idUser = Integer.parseInt(request.getParameter("user"));
+        }else {
+            idUser = (Integer) session.getAttribute("idUser");
+        }
+        User user = new User(idUser);
+        Post newPost = new Post(title, fullContent, shortContent, image, category, user);
         postService.insert(newPost);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("post/create-post.jsp");
+        request.setAttribute("mess", "Add success");
+        List<Category> categoryList = categoryService.selectAll();
+        List<User> userList = userService.selectAll();
+        request.setAttribute("categories", categoryList);
+        request.setAttribute("users", userList);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/post/create-post.jsp");
         dispatcher.forward(request, response);
     }
 
 
     private void showCreatePost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         List<Category> categoryList = categoryService.selectAll();
-        List<Author> authorList = authorService.selectAll();
-        request.setAttribute("authors", authorList);
+        List<User> userList = userService.selectAll();
         request.setAttribute("categories", categoryList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("post/create-post.jsp");
+        request.setAttribute("users", userList);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/post/create-post.jsp");
         dispatcher.forward(request, response);
     }
 }

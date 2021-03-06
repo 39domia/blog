@@ -3,72 +3,79 @@ package model;
 import java.time.LocalDateTime;
 
 public class Post {
-    private int idPost;
-    private String postTitle;
+    private int id;
+    private String title;
     private String fullContent;
     private String shortContent;
-    private LocalDateTime publishDate;
+    private LocalDateTime createdDate;
     private String image;
+    private LocalDateTime lastEditTime;
     Category category;
-    Author author;
-
-    public Post(String postTitle, String fullContent, String shortContent, LocalDateTime publishDate, String image, Category category, Author author) {
-        this.postTitle = postTitle;
-        this.fullContent = fullContent;
-        this.shortContent = shortContent;
-        this.publishDate = publishDate;
-        this.image = image;
-        this.category = category;
-        this.author = author;
-    }
-
-    public Post(int idPost, String postTitle, String fullContent, String shortContent, LocalDateTime publishDate, String image, Category category, Author author) {
-        this.idPost = idPost;
-        this.postTitle = postTitle;
-        this.fullContent = fullContent;
-        this.shortContent = shortContent;
-        this.publishDate = publishDate;
-        this.image = image;
-        this.category = category;
-        this.author = author;
-    }
-
-    public Post(String postTitle, String fullContent, String shortContent, String image, Category category, Author author) {
-        this.postTitle = postTitle;
-        this.fullContent = fullContent;
-        this.shortContent = shortContent;
-        this.image = image;
-        this.category = category;
-        this.author = author;
-    }
+    User user;
 
     public Post() {
     }
 
-    public Post(int idPost, String postTitle, String fullContent, String shortContent, String image, Category category, Author author) {
-        this.idPost = idPost;
-        this.postTitle = postTitle;
+    public Post(int id) {
+        this.id = id;
+    }
+
+    public Post(int id, String title, String fullContent, String shortContent, LocalDateTime createdDate, String image, LocalDateTime lastEditTime, Category category, User user) {
+        this.id = id;
+        this.title = title;
+        this.fullContent = fullContent;
+        this.shortContent = shortContent;
+        this.createdDate = createdDate;
+        this.image = image;
+        this.lastEditTime = lastEditTime;
+        this.category = category;
+        this.user = user;
+    }
+
+    public Post(String title, String fullContent, String shortContent, LocalDateTime createdDate, String image, LocalDateTime lastEditTime, Category category, User user) {
+        this.title = title;
+        this.fullContent = fullContent;
+        this.shortContent = shortContent;
+        this.createdDate = createdDate;
+        this.image = image;
+        this.lastEditTime = lastEditTime;
+        this.category = category;
+        this.user = user;
+    }
+
+    public Post(String title, String fullContent, String shortContent, String image, Category category, User user) {
+        this.title = title;
         this.fullContent = fullContent;
         this.shortContent = shortContent;
         this.image = image;
         this.category = category;
-        this.author = author;
+        this.user = user;
     }
 
-    public int getIdPost() {
-        return idPost;
+    public Post(int id, String title, String fullContent, String shortContent, String image, Category category, User user) {
+        this.id = id;
+        this.title = title;
+        this.fullContent = fullContent;
+        this.shortContent = shortContent;
+        this.image = image;
+        this.category = category;
+        this.user = user;
     }
 
-    public void setIdPost(int idPost) {
-        this.idPost = idPost;
+    public int getId() {
+        return id;
     }
 
-    public String getPostTitle() {
-        return postTitle;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setPostTitle(String postTitle) {
-        this.postTitle = postTitle;
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getFullContent() {
@@ -87,12 +94,12 @@ public class Post {
         this.shortContent = shortContent;
     }
 
-    public LocalDateTime getPublishDate() {
-        return publishDate;
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 
-    public void setPublishDate(LocalDateTime publishDate) {
-        this.publishDate = publishDate;
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 
     public String getImage() {
@@ -103,6 +110,14 @@ public class Post {
         this.image = image;
     }
 
+    public LocalDateTime getLastEditTime() {
+        return lastEditTime;
+    }
+
+    public void setLastEditTime(LocalDateTime lastEditTime) {
+        this.lastEditTime = lastEditTime;
+    }
+
     public Category getCategory() {
         return category;
     }
@@ -111,11 +126,11 @@ public class Post {
         this.category = category;
     }
 
-    public Author getAuthor() {
-        return author;
+    public User getUser() {
+        return user;
     }
 
-    public void setAuthor(Author author) {
-        this.author = author;
+    public void setUser(User user) {
+        this.user = user;
     }
 }
