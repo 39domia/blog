@@ -55,4 +55,13 @@ public class Category {
     public void setDes(String des) {
         this.des = des;
     }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", des='" + des + '\'' +
+                '}';
+    }
 }

@@ -17,6 +17,8 @@
 <script src="${pageContext.request.contextPath}../cool-admin/vendor/chartjs/Chart.bundle.min.js"></script>
 <script src="${pageContext.request.contextPath}../cool-admin/vendor/select2/select2.min.js">
 </script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+
 
 <!-- Main JS-->
 <script src="${pageContext.request.contextPath}../cool-admin/js/main.js"></script>

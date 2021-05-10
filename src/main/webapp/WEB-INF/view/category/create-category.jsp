@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Domia
@@ -9,6 +10,7 @@
 <html>
 <head>
     <title>Create category</title>
+
     <c:import url="${pageContext.request.contextPath}../import/css.jsp"/>
 
 </head>

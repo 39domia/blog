@@ -97,7 +97,13 @@ public class User {
         this.email = email;
     }
 
-
+    public User(int id, String email, String fullName, String description, String imageUser) {
+        this.id = id;
+        this.email = email;
+        this.fullName = fullName;
+        this.description = description;
+        this.image = imageUser;
+    }
 
 
     public int getId() {
@@ -186,5 +192,22 @@ public class User {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", alias='" + alias + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                ", fullName='" + fullName + '\'' +
+                ", yob=" + yob +
+                ", description='" + description + '\'' +
+                ", about='" + about + '\'' +
+                ", createdDate=" + createdDate +
+                ", image='" + image + '\'' +
+                '}';
     }
 }

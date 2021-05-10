@@ -153,14 +153,14 @@
                             <i class="fas fa-table"></i>Post</a>
                     </li>
                     <c:if test="${sessionScope.user.role == 1}">
-                    <li class="active">
-                        <a href="/category">
-                            <i class="fas fa-table"></i>Category</a>
-                    </li>
-                    <li>
-                        <a href="/user">
-                            <i class="fas fa-table"></i>User</a>
-                    </li>
+                        <li class="active">
+                            <a href="/category">
+                                <i class="fas fa-table"></i>Category</a>
+                        </li>
+                        <li>
+                            <a href="/user">
+                                <i class="fas fa-table"></i>User</a>
+                        </li>
                     </c:if>
                 </ul>
             </nav>
@@ -235,6 +235,15 @@
         <div class="main-content">
             <div class="section__content section__content--p30">
                 <div class="container-fluid">
+                    <c:if test="${errors!= null}">
+                        <c:forEach var="error" items="${errors}">
+                            <div class="row">
+                                <div class="alert alert-danger" role="alert">
+                                        ${error}
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </c:if>
                     <div class="row">
                         <div class="col">
                             <div class="card">
@@ -250,7 +259,7 @@
                                             </div>
                                             <div class="col-12 col-md-9">
                                                 <input type="text" id="postTitle" name="title"
-                                                       placeholder="Enter name" class="form-control" required>
+                                                       placeholder="Enter name" class="form-control">
                                             </div>
                                         </div>
                                         <div class="row form-group">
@@ -261,7 +270,7 @@
                                             <div class="col-12 col-md-9">
                                                 <textarea name="shortContent" id="shortContent" rows="4"
                                                           placeholder="Content..." class="form-control"
-                                                          required></textarea>
+                                                ></textarea>
                                             </div>
                                         </div>
                                         <div class="row form-group">
@@ -297,18 +306,18 @@
                                             </div>
                                         </div>
                                         <c:if test="${sessionScope.user.role == 1}">
-                                        <div class="row form-group">
-                                            <div class="col col-md-3">
-                                                <label class=" form-control-label"> Author</label>
+                                            <div class="row form-group">
+                                                <div class="col col-md-3">
+                                                    <label class=" form-control-label"> Author</label>
+                                                </div>
+                                                <div class="col-12 col-md-9">
+                                                    <select name="user" class="form-control">
+                                                        <c:forEach items="${users}" var="user">
+                                                            <option value="${user.id}">${user.email}</option>
+                                                        </c:forEach>
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <div class="col-12 col-md-9">
-                                                <select name="user" class="form-control">
-                                                    <c:forEach items="${users}" var="user">
-                                                        <option value="${user.id}">${user.email}</option>
-                                                    </c:forEach>
-                                                </select>
-                                            </div>
-                                        </div>
                                         </c:if>
                                         <div class="row card-footer">
                                             <button type="submit" class="btn btn-primary btn-sm">
@@ -350,33 +359,6 @@
                                 </div>
                             </div>
                         </c:if>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="smallmodal" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog modal-sm" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="smallmodalLabel">Small Modal</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>
-                            Are you sure about that?
-                        </p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                            Cancel
-                        </button>
-                        <button type="button" class="btn btn-primary">
-                            <%--                            <a href="/category?action=deleteCategory&id=${categories.idCategory}">Confirm</a>--%>
-                        </button>
                     </div>
                 </div>
             </div>

@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -20,6 +19,8 @@ public class LoginServlet extends HttpServlet {
     UserService userService = new UserService();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
         String action = request.getParameter("action");
         if (action == null) {
             action = "login";
@@ -39,18 +40,25 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void doRegister(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+        HttpSession session = request.getSession();
         String fullName = request.getParameter("fullName");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+        String passwordRepeat = request.getParameter("password-repeat");
+        if (!password.equals(passwordRepeat)){
+            session.invalidate();
+            request.setAttribute("mess", "Password and password repeat do not match");
+            showRegister(request, response);
+            return;
+        }
         User userRegister = new User(email, password, fullName);
         List<User> userList = userService.selectAll();
-        HttpSession session = request.getSession();
         for (User user : userList) {
             if (user.getEmail().equals(userRegister.getEmail())) {
                 session.invalidate();
                 request.setAttribute("mess", "Email is existed!");
                 showRegister(request, response);
-                break;
+                return;
             }
         }
         userService.register(new User(email, password, fullName));
@@ -77,6 +85,8 @@ public class LoginServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
         String action = request.getParameter("action");
         if (action == null) {
             action = "login";

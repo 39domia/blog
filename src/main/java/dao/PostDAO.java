@@ -15,10 +15,11 @@ import java.util.List;
 
 public class PostDAO extends DBDAO implements IBaseDAO<Post> {
     private static final String INSERT_POST_SQL = "INSERT INTO `posts` (`title`, `fullcontent`, `shortcontent`, `image`, `idcategory`, `iduser`) VALUES (?, ?, ?, ?, ?, ?);";
-    private static final String SELECT_POSTS_BY_ID = "SELECT posts.*, categories.`name`, users.email FROM posts inner join categories on posts.idcategory = categories.id inner join users on posts.iduser = users.id where idpost = ?;";
-    private static final String SELECT_ALL_POSTS = "SELECT posts.*, categories.`name`, users.email FROM posts inner join categories on posts.idcategory = categories.id inner join users on posts.iduser = users.id;";
+    private static final String SELECT_POSTS_BY_ID = "SELECT posts.*, categories.`name`, users.`email`, users.`fullname`, users.`image` as userimage, users.`description` FROM posts inner join categories on posts.idcategory = categories.id inner join users on posts.iduser = users.id where idpost = ?;";
+    private static final String SELECT_ALL_POSTS = "SELECT posts.*, categories.`name`, users.email FROM posts inner join categories on posts.idcategory = categories.id inner join users on posts.iduser = users.id order by lastedittime desc;";
     private static final String SELECT_ALL_POSTS_BY_USER = "SELECT posts.*, categories.`name`, users.email FROM posts inner join categories on posts.idcategory = categories.id inner join users on posts.iduser = users.id where posts.iduser=?;";
-    private static final String SELECT_ALL_POSTS_LIMIT = "SELECT posts.*, categories.`name`, users.email FROM posts inner join categories on posts.idcategory = categories.id inner join users on posts.iduser = users.id limit ?;";
+    private static final String SELECT_ALL_POSTS_BY_CATEGORY = "SELECT posts.*, categories.`name`, users.email FROM posts inner join categories on posts.idcategory = categories.id inner join users on posts.iduser = users.id where categories.id=? order by lastedittime desc;";
+    private static final String SELECT_ALL_POSTS_LIMIT = "SELECT posts.*, categories.`name`, users.email FROM posts inner join categories on posts.idcategory = categories.id inner join users on posts.iduser = users.id order by lastedittime desc limit ?;";
     private static final String UPDATE_POST_SQL = "UPDATE `posts` SET `title` = ?, `fullcontent` = ?, `shortcontent` = ?, `image` = ?, `lastedittime`= now(), `idcategory` = ?, `iduser` = ? WHERE (`idpost` = ?);";
     private static final String DELETE_POST_SQL = "DELETE FROM `posts` WHERE (`idpost` = ?);";
     private static final String SEARCH_BY_NAME = "SELECT posts.*, categories.`name`, users.email FROM posts inner join categories on posts.idcategory = categories.id inner join users on posts.iduser = users.id where title like ?;";
@@ -85,6 +86,36 @@ public class PostDAO extends DBDAO implements IBaseDAO<Post> {
         }
         return postList;
     }
+    public List<Post> selectAllPostCategory(int idCategory) throws SQLException {
+        List<Post> postList = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_POSTS_BY_CATEGORY)) {
+            preparedStatement.setInt(1,idCategory);
+            System.out.println(preparedStatement);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                int idPost = rs.getInt("idpost");
+                String postTitle = rs.getString("title");
+                String fullContent = rs.getString("fullcontent");
+                String shortContent = rs.getString("shortcontent");
+                String createdDate = rs.getString("createddate");
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime localDateTime = LocalDateTime.parse(createdDate, dateTimeFormatter);
+                String image = rs.getString("image");
+                String lastEditTime = rs.getString("lastedittime");
+                LocalDateTime localDateTime2 = LocalDateTime.parse(lastEditTime, dateTimeFormatter);
+                String categoryName = rs.getString("name");
+                String email = rs.getString("email");
+                int idUser = rs.getInt("iduser");
+                Category category = new Category(idCategory, categoryName);
+                User user = new User(idUser, email);
+                postList.add(new Post(idPost, postTitle, fullContent, shortContent, localDateTime, image, localDateTime2, category, user));
+            }
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+        return postList;
+    }
 
     public List<Post> selectLimit(int limit) throws SQLException {
         List<Post> postList = new ArrayList<>();
@@ -120,7 +151,6 @@ public class PostDAO extends DBDAO implements IBaseDAO<Post> {
 
     @Override
     public void insert(Post post) throws SQLException {
-        System.out.println(INSERT_POST_SQL);
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_POST_SQL)) {
             preparedStatement.setString(1, post.getTitle());
@@ -159,8 +189,11 @@ public class PostDAO extends DBDAO implements IBaseDAO<Post> {
                 int idUser = rs.getInt("iduser");
                 String categoryName = rs.getString("name");
                 String email = rs.getString("email");
+                String fullName = rs.getString("fullname");
+                String description = rs.getString("description");
+                String imageUser = rs.getString("userimage");
                 Category category = new Category(idCategory, categoryName);
-                User user = new User(idUser, email);
+                User user = new User(idUser, email, fullName, description, imageUser);
                 post = new Post(idPost, postTitle, fullContent, shortContent, localDateTime, image, localDateTime2, category, user);
             }
         } catch (SQLException e) {

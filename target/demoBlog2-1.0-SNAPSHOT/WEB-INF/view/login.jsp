@@ -1,10 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Domia
-  Date: 3/5/2021
-  Time: 2:47 PM
-  To change this template use File | Settings | File Templates.
---%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,37 +14,8 @@
     <!-- Title Page-->
     <title>Login</title>
 
-    <<!-- Fontfaces CSS-->
-    <link href="${pageContext.request.contextPath}../cool-admin/css/font-face.css" rel="stylesheet" media="all">
-    <link href="${pageContext.request.contextPath}../cool-admin/vendor/font-awesome-4.7/css/font-awesome.min.css"
-          rel="stylesheet" media="all">
-    <link href="${pageContext.request.contextPath}../cool-admin/vendor/font-awesome-5/css/fontawesome-all.min.css"
-          rel="stylesheet" media="all">
-    <link href="${pageContext.request.contextPath}../cool-admin/vendor/mdi-font/css/material-design-iconic-font.min.css"
-          rel="stylesheet" media="all">
+    <c:import url="${pageContext.request.contextPath}./import/css.jsp"/>
 
-    <!-- Bootstrap CSS-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-
-    <!-- Vendor CSS-->
-    <link href="${pageContext.request.contextPath}../cool-admin/vendor/animsition/animsition.min.css" rel="stylesheet"
-          media="all">
-    <link href="${pageContext.request.contextPath}../cool-admin/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css"
-          rel="stylesheet"
-          media="all">
-    <link href="${pageContext.request.contextPath}../cool-admin/vendor/wow/animate.css" rel="stylesheet" media="all">
-    <link href="${pageContext.request.contextPath}../cool-admin/vendor/css-hamburgers/hamburgers.min.css"
-          rel="stylesheet" media="all">
-    <link href="${pageContext.request.contextPath}../cool-admin/vendor/slick/slick.css" rel="stylesheet" media="all">
-    <link href="${pageContext.request.contextPath}../cool-admin/vendor/select2/select2.min.css" rel="stylesheet"
-          media="all">
-    <link href="${pageContext.request.contextPath}../cool-admin/vendor/perfect-scrollbar/perfect-scrollbar.css"
-          rel="stylesheet" media="all">
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-
-    <!-- Main CSS-->
-    <link href="${pageContext.request.contextPath}../cool-admin/css/theme.css" rel="stylesheet" media="all">
 
 </head>
 
@@ -103,7 +68,7 @@
 </div>
 
 
-<c:import url="${pageContext.request.contextPath}../import/script.jsp"/>
+<c:import url="${pageContext.request.contextPath}./import/script.jsp"/>
 
 </body>
 

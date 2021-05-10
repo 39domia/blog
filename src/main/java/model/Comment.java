@@ -66,4 +66,15 @@ public class Comment {
     public void setIdRoot(int idRoot) {
         this.idRoot = idRoot;
     }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", content='" + content + '\'' +
+                ", email='" + email + '\'' +
+                ", cratedDate=" + cratedDate +
+                ", idRoot=" + idRoot +
+                '}';
+    }
 }

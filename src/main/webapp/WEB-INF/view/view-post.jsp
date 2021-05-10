@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Domia
@@ -12,22 +13,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300, 400,700" rel="stylesheet">
+    <c:import url="${pageContext.request.contextPath}./import/front-end/css.jsp"/>
 
-    <link rel="stylesheet" href="${pageContext.request.contextPath}vendor/css/bootstrap.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}vendor/css/animate.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}vendor/css/owl.carousel.min.css">
-
-    <link rel="stylesheet" href="${pageContext.request.contextPath}vendor/fonts/ionicons/css/ionicons.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}vendor/fonts/fontawesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}vendor/fonts/flaticon/font/flaticon.css">
-
-    <!-- Theme Style -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}vendor/css/style.css">
 </head>
 <body>
-
-
 
 <header role="banner">
     <div class="top-bar">
@@ -47,7 +36,6 @@
             </div>
         </div>
     </div>
-
     <div class="container logo-wrap">
         <div class="row pt-5">
             <div class="col-12 text-center">
@@ -59,38 +47,21 @@
 
     <nav class="navbar navbar-expand-md  navbar-light bg-light">
         <div class="container">
-
-
             <div class="collapse navbar-collapse" id="navbarMenu">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="index.html">Home</a>
+                        <a class="nav-link active" href="/index">Home</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="category.html" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Travel</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown04">
-                            <a class="dropdown-item" href="category.html">Asia</a>
-                            <a class="dropdown-item" href="category.html">Europe</a>
-                            <a class="dropdown-item" href="category.html">Dubai</a>
-                            <a class="dropdown-item" href="category.html">Africa</a>
-                            <a class="dropdown-item" href="category.html">South America</a>
-                        </div>
-
-                    </li>
-
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="category.html" id="dropdown05" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
+                        <a class="nav-link dropdown-toggle"
+                           href="${pageContext.request.contextPath}vendor/category.html" id="dropdown05"
+                           data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">Categories</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown05">
-                            <a class="dropdown-item" href="category.html">Lifestyle</a>
-                            <a class="dropdown-item" href="category.html">Food</a>
-                            <a class="dropdown-item" href="category.html">Adventure</a>
-                            <a class="dropdown-item" href="category.html">Travel</a>
-                            <a class="dropdown-item" href="category.html">Business</a>
+                            <c:forEach items="${categories}" var="category">
+                                <a class="dropdown-item" href="index?action=view-category&category-id=${category.id}">${category.name}</a>
+                            </c:forEach>
                         </div>
-
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="blog.html">Blog</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="about.html">About</a>
@@ -99,32 +70,27 @@
                         <a class="nav-link" href="contact.html">Contact</a>
                     </li>
                 </ul>
-
             </div>
-        </div
+        </div>
     </nav>
+
 </header>
 <!-- END header -->
 
 <section class="site-section py-lg">
     <div class="container">
-
         <div class="row blog-entries">
             <div class="col-md-12 col-lg-8 main-content">
-                <h1 class="mb-4">${post.postTitle}</h1>
+                <h1 class="mb-4">${post.title}</h1>
                 <div class="post-meta">
-                    <span class="category">${post.category.categoryName}</span>
-                    <span class="mr-2">${post.publishDate}</span> &bullet;
+                    <span class="category">${post.category.name}</span>
+                    <span class="mr-2">${post.lastEditTime}</span> &bullet;
                     <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
                 </div>
                 <div class="post-content-body">${post.fullContent}</div>
-
-
                 <div class="pt-5">
                     <p>Categories:  <a href="#">Food</a>, <a href="#">Travel</a>  Tags: <a href="#">#manila</a>, <a href="#">#asia</a></p>
                 </div>
-
-
                 <div class="pt-5">
                     <h3 class="mb-5">6 Comments</h3>
                     <ul class="comment-list">
@@ -253,10 +219,10 @@
                 <!-- END sidebar-box -->
                 <div class="sidebar-box">
                     <div class="bio text-center">
-                        <img src="${pageContext.request.contextPath}vendor/images/person_1.jpg" alt="Image Placeholder" class="img-fluid">
+                        <img src="${post.user.image}" alt="Image Placeholder" class="img-fluid">
                         <div class="bio-body">
-                            <h2>${post.author.authorName}</h2>
-                            <p>${post.author.authorDes}</p>
+                            <h2>${post.user.fullName}</h2>
+                            <p>${post.user.description}</p>
                             <p><a href="#" class="btn btn-primary btn-sm">Read my bio</a></p>
                             <p class="social">
                                 <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
@@ -495,17 +461,8 @@
 <!-- END footer -->
 
 <!-- loader -->
-<div id="loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#f4b214"/></svg></div>
-
-<script src="${pageContext.request.contextPath}vendor/js/jquery-3.2.1.min.js"></script>
-<script src="${pageContext.request.contextPath}vendor/js/jquery-migrate-3.0.0.js"></script>
-<script src="${pageContext.request.contextPath}vendor/js/popper.min.js"></script>
-<script src="${pageContext.request.contextPath}vendor/js/bootstrap.min.js"></script>
-<script src="${pageContext.request.contextPath}vendor/js/owl.carousel.min.js"></script>
-<script src="${pageContext.request.contextPath}vendor/js/jquery.waypoints.min.js"></script>
-<script src="${pageContext.request.contextPath}vendor/js/jquery.stellar.min.js"></script>
+<c:import url="${pageContext.request.contextPath}./import/front-end/script.jsp"/>
 
 
-<script src="${pageContext.request.contextPath}vendor/js/main.js"></script>
 </body>
 </html>

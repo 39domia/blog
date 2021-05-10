@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "PostServlet", urlPatterns = "/post")
@@ -25,6 +26,8 @@ public class PostServlet extends HttpServlet {
     UserService userService = new UserService();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
         String action = request.getParameter("action");
         if (action == null) {
             action = "";
@@ -46,6 +49,8 @@ public class PostServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
         String action = request.getParameter("action");
         if (action == null) {
             action = "";
@@ -147,30 +152,51 @@ public class PostServlet extends HttpServlet {
     }
 
     private void insertPost(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
-        HttpSession session= request.getSession();
+        List<String> errorList =  new ArrayList<>();
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
+        HttpSession session = request.getSession();
         String title = request.getParameter("title");
         String shortContent = request.getParameter("shortContent");
         String fullContent = request.getParameter("fullContent");
         String image = request.getParameter("image");
         int categoryID = Integer.parseInt(request.getParameter("category"));
-        Category category = new Category(categoryID);
-        int idUser;
-        int role = (int) session.getAttribute("role");
-        if ( role == 1){
-            idUser = Integer.parseInt(request.getParameter("user"));
-        }else {
-            idUser = (Integer) session.getAttribute("idUser");
+        if (title.isEmpty() || title.length() > 200){
+            errorList.add("Title field is empty or too long");
         }
-        User user = new User(idUser);
-        Post newPost = new Post(title, fullContent, shortContent, image, category, user);
-        postService.insert(newPost);
-        request.setAttribute("mess", "Add success");
-        List<Category> categoryList = categoryService.selectAll();
-        List<User> userList = userService.selectAll();
-        request.setAttribute("categories", categoryList);
-        request.setAttribute("users", userList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/post/create-post.jsp");
-        dispatcher.forward(request, response);
+        if (shortContent.isEmpty()){
+            errorList.add("Short content field is empty");
+        }
+        if (errorList.size() == 0){
+            Category category = new Category(categoryID);
+            int idUser;
+            int role = (int) session.getAttribute("role");
+            if (role == 1) {
+                idUser = Integer.parseInt(request.getParameter("user"));
+            } else {
+                idUser = (Integer) session.getAttribute("idUser");
+            }
+            User user = new User(idUser);
+            Post newPost = new Post(title, fullContent, shortContent, image, category, user);
+            postService.insert(newPost);
+            request.setAttribute("mess", "Add success");
+            List<Category> categoryList = categoryService.selectAll();
+            List<User> userList = userService.selectAll();
+            request.setAttribute("categories", categoryList);
+            request.setAttribute("users", userList);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/post/create-post.jsp");
+            dispatcher.forward(request, response);
+        }
+        else {
+            request.setAttribute("errors", errorList);
+            List<Category> categoryList = categoryService.selectAll();
+            List<User> userList = userService.selectAll();
+            request.setAttribute("categories", categoryList);
+            request.setAttribute("users", userList);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/post/create-post.jsp");
+            dispatcher.forward(request, response);
+        }
+
     }
 
 

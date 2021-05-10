@@ -7,21 +7,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300, 400,700" rel="stylesheet">
+    <c:import url="${pageContext.request.contextPath}./import/front-end/css.jsp"/>
 
-    <link rel="stylesheet" href="${pageContext.request.contextPath}vendor/css/bootstrap.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}vendor/css/animate.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}vendor/css/owl.carousel.min.css">
-
-    <link rel="stylesheet" href="${pageContext.request.contextPath}vendor/fonts/ionicons/css/ionicons.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}vendor/fonts/fontawesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}vendor/fonts/flaticon/font/flaticon.css">
-
-    <!-- Theme Style -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}vendor/css/style.css">
 </head>
 <body>
-
 <header role="banner">
     <div class="top-bar">
         <div class="container">
@@ -38,7 +27,7 @@
                     <!-- <a href="#"><span class="fa fa-search"></span></a> -->
                     <form action="#" class="search-top-form">
                         <span class="icon fa fa-search"></span>
-                        <input type="text" id="s" placeholder="Type keyword to search...">
+                        <input type="text" id="search" placeholder="Type keyword to search...">
                     </form>
                 </div>
             </div>
@@ -63,41 +52,29 @@
                         <a class="nav-link active" href="/index">Home</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="${pageContext.request.contextPath}vendor/category.html" id="dropdown04" data-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false">Travel</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown04">
-                            <a class="dropdown-item" href="${pageContext.request.contextPath}vendor/category.html">Asia</a>
-                            <a class="dropdown-item" href="${pageContext.request.contextPath}vendor/category.html">Europe</a>
-                            <a class="dropdown-item" href="${pageContext.request.contextPath}vendor/category.html">Dubai</a>
-                            <a class="dropdown-item" href="${pageContext.request.contextPath}vendor/category.html">Africa</a>
-                            <a class="dropdown-item" href="${pageContext.request.contextPath}vendor/category.html">South America</a>
-                        </div>
-
-                    </li>
-
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="${pageContext.request.contextPath}vendor/category.html" id="dropdown05" data-toggle="dropdown"
+                        <a class="nav-link dropdown-toggle"
+                           href="${pageContext.request.contextPath}vendor/category.html" id="dropdown05"
+                           data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">Categories</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown05">
-                            <a class="dropdown-item" href="${pageContext.request.contextPath}vendor/category.html">Lifestyle</a>
-                            <a class="dropdown-item" href="${pageContext.request.contextPath}vendor/category.html">Food</a>
-                            <a class="dropdown-item" href="${pageContext.request.contextPath}vendor/category.html">Adventure</a>
-                            <a class="dropdown-item" href="${pageContext.request.contextPath}vendor/category.html">Travel</a>
-                            <a class="dropdown-item" href="${pageContext.request.contextPath}vendor/category.html">Business</a>
+                            <c:forEach items="${categories}" var="category">
+                                <a class="dropdown-item" href="index?action=view-category&category-id=${category.id}">${category.name}</a>
+                            </c:forEach>
                         </div>
-
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="about.html">About</a>
+                        <a class="nav-link" href="#">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact</a>
+                        <a class="nav-link" href="#">Contact</a>
+                    </li><li class="nav-item">
+                        <a class="nav-link" href="post">Login</a>
                     </li>
                 </ul>
-
             </div>
-        </div
+        </div>
     </nav>
+
 </header>
 <!-- END header -->
 
@@ -105,20 +82,19 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-
                 <div class="owl-carousel owl-theme home-slider">
                     <c:forEach var="post" items="${postsLimit3}">
                         <div>
-                            <a href="/index?action=view-post&id=${post.idPost}"
+                            <a href="/index?action=view-post&id=${post.id}"
                                class="a-block d-flex align-items-center height-lg"
                                style="background-image: url('${post.image}'); ">
                                 <div class="text half-to-full">
                                     <div class="post-meta">
-                                        <span class="category">${post.category.categoryName}</span>
-                                        <span class="mr-2">${post.publishDate}</span> &bullet;
+                                        <span class="category">${post.category.name}</span>
+                                        <span class="mr-2">${post.lastEditTime}</span> &bullet;
                                         <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
                                     </div>
-                                    <h3>${post.postTitle}</h3>
+                                    <h3>${post.title}</h3>
                                     <p>${post.shortContent}</p>
                                 </div>
                             </a>
@@ -130,15 +106,15 @@
         <div class="row">
             <c:forEach var="post" items="${postsLimit3}">
                 <div class="col-md-6 col-lg-4">
-                    <a href="/index?action=view-post&id=${post.idPost}" class="a-block d-flex align-items-center height-md"
+                    <a href="/index?action=view-post&id=${post.id}" class="a-block d-flex align-items-center height-md"
                        style="background-image: url('${post.image}'); ">
                         <div class="text">
                             <div class="post-meta">
-                                <span class="category">${post.category.categoryName}</span>
-                                <span class="mr-2">${post.publishDate}</span> &bullet;
+                                <span class="category">${post.category.name}</span>
+                                <span class="mr-2">${post.lastEditTime}</span> &bullet;
                                 <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
                             </div>
-                            <h3>${post.postTitle}</h3>
+                            <h3>${post.title}</h3>
                         </div>
                     </a>
                 </div>
@@ -162,15 +138,16 @@
                 <div class="row">
                     <c:forEach var="post" items="${postsLifestyle}">
                         <div class="col-md-6">
-                            <a href="/index?action=view-post&id=${post.idPost}" class="blog-entry element-animate" data-animate-effect="fadeIn">
+                            <a href="/index?action=view-post&id=${post.id}" class="blog-entry element-animate"
+                               data-animate-effect="fadeIn">
                                 <img src="${post.image}" alt="Image placeholder">
                                 <div class="blog-content-body">
                                     <div class="post-meta">
-                                        <span class="category">${post.category.categoryName}</span>
-                                        <span class="mr-2">${post.publishDate}</span> &bullet;
+                                        <span class="category">${post.category.name}</span>
+                                        <span class="mr-2">${post.lastEditTime}</span> &bullet;
                                         <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
                                     </div>
-                                    <h2>${post.postTitle}</h2>
+                                    <h2>${post.title}</h2>
                                 </div>
                             </a>
                         </div>
@@ -267,11 +244,11 @@
                 <!-- END sidebar-box -->
                 <div class="sidebar-box">
                     <div class="bio text-center">
-                        <img src="${pageContext.request.contextPath}vendor/images/person_1.jpg" alt="Image Placeholder"
+                        <img src="${user.image}" alt="Image Placeholder"
                              class="img-fluid">
                         <div class="bio-body">
-                            <h2>${author.authorName}</h2>
-                            <p>${author.authorDes}</p>
+                            <h2>${user.fullName}</h2>
+                            <p>${user.description}</p>
                             <p><a href="#" class="btn btn-primary btn-sm">Read my bio</a></p>
                             <p class="social">
                                 <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
@@ -289,7 +266,8 @@
                         <ul>
                             <li>
                                 <a href="">
-                                    <img src="${pageContext.request.contextPath}vendor/images/img_2.jpg" alt="Image placeholder" class="mr-4">
+                                    <img src="${pageContext.request.contextPath}vendor/images/img_2.jpg"
+                                         alt="Image placeholder" class="mr-4">
                                     <div class="text">
                                         <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
                                         <div class="post-meta">
@@ -301,7 +279,8 @@
                             </li>
                             <li>
                                 <a href="">
-                                    <img src="${pageContext.request.contextPath}vendor/images/img_4.jpg" alt="Image placeholder" class="mr-4">
+                                    <img src="${pageContext.request.contextPath}vendor/images/img_4.jpg"
+                                         alt="Image placeholder" class="mr-4">
                                     <div class="text">
                                         <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
                                         <div class="post-meta">
@@ -313,7 +292,8 @@
                             </li>
                             <li>
                                 <a href="">
-                                    <img src="${pageContext.request.contextPath}vendor/images/img_12.jpg" alt="Image placeholder" class="mr-4">
+                                    <img src="${pageContext.request.contextPath}vendor/images/img_12.jpg"
+                                         alt="Image placeholder" class="mr-4">
                                     <div class="text">
                                         <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
                                         <div class="post-meta">
@@ -370,7 +350,8 @@
             <div class="col-md-4">
                 <h3>Paragraph</h3>
                 <p>
-                    <img src="${pageContext.request.contextPath}vendor/images/img_1.jpg" alt="Image placeholder" class="img-fluid">
+                    <img src="${pageContext.request.contextPath}vendor/images/img_1.jpg" alt="Image placeholder"
+                         class="img-fluid">
                 </p>
 
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, accusantium optio unde perferendis
@@ -384,7 +365,8 @@
                             <ul>
                                 <li>
                                     <a href="">
-                                        <img src="${pageContext.request.contextPath}vendor/images/img_6.jpg" alt="Image placeholder" class="mr-4">
+                                        <img src="${pageContext.request.contextPath}vendor/images/img_6.jpg"
+                                             alt="Image placeholder" class="mr-4">
                                         <div class="text">
                                             <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
                                             <div class="post-meta">
@@ -396,7 +378,8 @@
                                 </li>
                                 <li>
                                     <a href="">
-                                        <img src="${pageContext.request.contextPath}vendor/images/img_3.jpg" alt="Image placeholder" class="mr-4">
+                                        <img src="${pageContext.request.contextPath}vendor/images/img_3.jpg"
+                                             alt="Image placeholder" class="mr-4">
                                         <div class="text">
                                             <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
                                             <div class="post-meta">
@@ -408,7 +391,8 @@
                                 </li>
                                 <li>
                                     <a href="">
-                                        <img src="${pageContext.request.contextPath}vendor/images/img_4.jpg" alt="Image placeholder" class="mr-4">
+                                        <img src="${pageContext.request.contextPath}vendor/images/img_4.jpg"
+                                             alt="Image placeholder" class="mr-4">
                                         <div class="text">
                                             <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
                                             <div class="post-meta">
@@ -473,15 +457,7 @@
     </svg>
 </div>
 
-<script src="${pageContext.request.contextPath}vendor/js/jquery-3.2.1.min.js"></script>
-<script src="${pageContext.request.contextPath}vendor/js/jquery-migrate-3.0.0.js"></script>
-<script src="${pageContext.request.contextPath}vendor/js/popper.min.js"></script>
-<script src="${pageContext.request.contextPath}vendor/js/bootstrap.min.js"></script>
-<script src="${pageContext.request.contextPath}vendor/js/owl.carousel.min.js"></script>
-<script src="${pageContext.request.contextPath}vendor/js/jquery.waypoints.min.js"></script>
-<script src="${pageContext.request.contextPath}vendor/js/jquery.stellar.min.js"></script>
+<c:import url="${pageContext.request.contextPath}./import/front-end/script.jsp"/>
 
-
-<script src="${pageContext.request.contextPath}vendor/js/main.js"></script>
 </body>
 </html>

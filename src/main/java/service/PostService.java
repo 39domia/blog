@@ -6,7 +6,7 @@ import model.Post;
 import java.sql.SQLException;
 import java.util.List;
 
-public class PostService implements IBaseService<Post>{
+public class PostService implements IBaseService<Post> {
     PostDAO postDAO = new PostDAO();
 
     @Override
@@ -18,10 +18,13 @@ public class PostService implements IBaseService<Post>{
         return postDAO.selectAllPostUser(idUser);
     }
 
+    public List<Post> selectAllPostCategory(int idCategory) throws SQLException {
+        return postDAO.selectAllPostCategory(idCategory);
+    }
+
     @Override
     public void insert(Post post) throws SQLException {
         postDAO.insert(post);
-
     }
 
     @Override
